@@ -1,29 +1,31 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 
-import firebase from 'firebase/app' // Import the Firebase SDK for Google Cloud Firestore
-import 'firebase/firestore'; // Import the Firebase SDK for Firestore
-import 'firebase/auth'; // Import the Firebase SDK for Authentication
+import { auth } from './firebase'; // Import Firebase auth
+import { useAuthState } from 'react-firebase-hooks/auth'; 
 
-import { useAuthState } from'react-firebase-hooks/auth'; // Import the Firebase SDK for Auth
-import { useCollectionData } from'react-firebase-hooks/firestore'; // Import the Firebase SDK for Firestore
-
-
-
-const auth = firebase.auth();
-const firestore = firebase.firestore();
-
+import SignIn from './components/SignIn';
+import ChatRoom from './pages/ChatRoom';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [user] = useAuthState(auth);
 
   return (
     <>
       <div>
+        <header>
+          <h1>SuperChat</h1>
+          {user && <button onClick={() => auth.signOut()}>Sign Out</button>}
+          
+        </header>
         
+
+        <section>
+          {user ? <ChatRoom /> : <SignIn />}
+        </section>
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
